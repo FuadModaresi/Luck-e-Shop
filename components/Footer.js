@@ -1,6 +1,51 @@
+"use client";
+
 import Link from 'next/link';
+import { useState } from 'react';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [status, setStatus] = useState(''); // For success/error messages
+
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleSubscribe = async () => {
+    try {
+      if (!email) {
+        setError('Email is required');
+        return;
+      }
+      if (!validateEmail(email)) {
+        setError('Please enter a valid email');
+        return;
+      }
+
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus('Thank you for subscribing!');
+        setEmail('');
+        setError('');
+      } else {
+        setError(data.message || 'Something went wrong');
+      }
+    } catch (err) {
+      setError('Failed to subscribe. Please try again.');
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -66,15 +111,28 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Newsletter</h4>
             <p className="text-gray-400 mb-4">Subscribe to receive updates and special offers.</p>
-            <div className="flex">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="px-4 py-2 rounded-l-md w-full text-gray-900"
-              />
-              <button className="bg-orange px-4 py-2 rounded-r-md hover:bg-orange/90">
-                Subscribe
-              </button>
+            <div className="flex flex-col">
+              <div className="flex">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="px-4 py-2 rounded-l-md w-full text-gray-900"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError('');
+                    setStatus('');
+                  }}
+                />
+                <button 
+                  className="bg-orange px-4 py-2 rounded-r-md hover:bg-orange/90 text-white"
+                  onClick={handleSubscribe}
+                >
+                  Subscribe
+                </button>
+              </div>
+              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+              {status && <p className="text-green-500 text-sm mt-2">{status}</p>}
             </div>
           </div>
         </div>
