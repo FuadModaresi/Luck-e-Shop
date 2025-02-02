@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@prisma/client": "^6.3.0",
+    "express": "^4.21.2",
     "next": "15.1.6",
+    "openai": "^4.82.0",
     "prisma": "^6.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
