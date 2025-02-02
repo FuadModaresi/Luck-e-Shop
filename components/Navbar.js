@@ -68,7 +68,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <span className="text-2xl font-bold text-orange">Luck e </span>
+            <span className="text-2xl font-bold text-orange">Luck e🐢e Shop</span>
           </Link>
 
           {/* Navigation Links */}
