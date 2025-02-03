@@ -1,2 +1,2 @@
 # Luck e Shop
- an ecommerce frontend nextjs template 
+ an ecommerce frontend nextjs template.
