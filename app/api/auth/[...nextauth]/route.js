@@ -1,3 +1,4 @@
+// Comment out or remove this file if you're not using authentication yet
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 

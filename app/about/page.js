@@ -3,167 +3,242 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const AboutPage = () => {
+  const [activeTab, setActiveTab] = useState('story');
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      if (scrolled > 300) {
+        setIsVisible(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="bg-beige-50">
-      {/* Hero Section with Parallax Effect */}
-      <div className="relative h-[60vh] overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src="/images/about-hero.jpg" 
-            alt="Persian Carpet Workshop" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-gray-900/70" />
-        </div>
-        <div className="relative h-full flex items-center">
+      {/* Enhanced Hero Section with Video Background */}
+      <div className="relative h-[80vh] overflow-hidden">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          className="absolute w-full h-full object-cover"
+        >
+          <source src="/videos/carpet-making.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-gray-900/70" />
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative h-full flex items-center"
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="font-serif text-6xl font-bold text-white mb-6">Crafting Excellence Since 1981</h1>
-            <p className="text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed">
-              A legacy of artistry, tradition, and unparalleled quality in Persian carpets
+            <h1 className="font-serif text-7xl font-bold text-white mb-6">
+              Crafting Excellence Since 1981
+            </h1>
+            <p className="text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+              Discover the artistry and tradition behind every Persian carpet
             </p>
+            <button 
+              onClick={() => document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' })}
+              className="mt-8 px-8 py-4 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-all duration-300 flex items-center gap-2 mx-auto"
+            >
+              Explore Our Story
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </button>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Stats Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 -mt-16 mb-24">
+      <div id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Interactive Stats Section */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 -mt-20 mb-24 relative z-10">
           {[
-            { number: '40+', label: 'Years of Excellence' },
-            { number: '5000+', label: 'Carpets Sold' },
-            { number: '100+', label: 'Artisan Partners' },
-            { number: '25+', label: 'Countries Served' }
+            { number: '40+', label: 'Years of Excellence', icon: '🏆' },
+            { number: '5000+', label: 'Carpets Sold', icon: '🎨' },
+            { number: '100+', label: 'Artisan Partners', icon: '🤝' },
+            { number: '25+', label: 'Countries Served', icon: '🌍' }
           ].map((stat) => (
-            <div key={stat.label} className="bg-white rounded-xl p-6 shadow-lg text-center transform hover:-translate-y-1 transition-all duration-300">
-              <div className="font-serif text-3xl font-bold text-primary-500 mb-2">{stat.number}</div>
+            <motion.div
+              key={stat.label}
+              whileHover={{ scale: 1.05 }}
+              className="bg-white rounded-xl p-8 shadow-lg text-center"
+            >
+              <div className="text-3xl mb-4">{stat.icon}</div>
+              <div className="font-serif text-4xl font-bold text-primary-500 mb-2">{stat.number}</div>
               <div className="text-gray-600">{stat.label}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* Story Section with Timeline */}
-        <div className="mb-24">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl font-bold text-gray-900 mb-4">Our Journey</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              From a small family shop to an international brand, our story is woven with passion and dedication
-            </p>
+        {/* Interactive Navigation Tabs */}
+        <div className="mb-16">
+          <div className="flex justify-center space-x-8 mb-12">
+            {['story', 'values', 'team'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300 ${
+                  activeTab === tab 
+                    ? 'bg-primary-500 text-white shadow-lg'
+                    : 'bg-white text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
           </div>
-          
-          <div className="space-y-12">
-            {[
-              {
-                year: '1981',
-                title: 'The Beginning',
-                description: 'Founded as a small family shop in Tehran'
-              },
-              {
-                year: '1995',
-                title: 'International Expansion',
-                description: 'Opened our first international showroom in Dubai'
-              },
-              {
-                year: '2010',
-                title: 'Digital Revolution',
-                description: 'Launched our e-commerce platform'
-              },
-              {
-                year: '2023',
-                title: 'Sustainable Future',
-                description: 'Implemented eco-friendly practices across operations'
-              }
-            ].map((milestone, index) => (
-              <div key={milestone.year} className={`flex ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8`}>
-                <div className="flex-1">
-                  <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div className="text-primary-500 font-bold text-xl mb-2">{milestone.year}</div>
-                    <h3 className="font-serif text-2xl font-semibold mb-3">{milestone.title}</h3>
-                    <p className="text-gray-600">{milestone.description}</p>
+
+          {/* Dynamic Content Based on Active Tab */}
+          <div className="min-h-[600px]">
+            {activeTab === 'story' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-16"
+              >
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                  <div>
+                    <h2 className="font-serif text-4xl font-bold mb-6">Our Heritage</h2>
+                    <p className="text-gray-600 leading-relaxed mb-6">
+                      Founded in 1981, Persian Carpets began as a small family workshop dedicated to preserving 
+                      the ancient art of carpet weaving. Today, we're proud to be one of the leading curators 
+                      of fine Persian carpets worldwide.
+                    </p>
+                    <p className="text-gray-600 leading-relaxed">
+                      Our journey has been marked by an unwavering commitment to quality, authenticity, and 
+                      the preservation of traditional craftsmanship.
+                    </p>
                   </div>
-                </div>
-                <div className="hidden md:block w-20 h-0.5 bg-primary-500 flex-none"></div>
-                <div className="flex-1"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Values Section with Icons */}
-        <div className="mb-24">
-          <h2 className="font-serif text-4xl font-bold text-center mb-16">Our Core Values</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: '🎨',
-                title: 'Artistry',
-                description: 'Every carpet is a masterpiece, crafted with meticulous attention to detail and artistic excellence.'
-              },
-              {
-                icon: '🤝',
-                title: 'Heritage',
-                description: 'Preserving and promoting the rich cultural heritage of Persian carpet weaving.'
-              },
-              {
-                icon: '♻️',
-                title: 'Sustainability',
-                description: 'Committed to ethical sourcing and environmental responsibility in our practices.'
-              }
-            ].map((value) => (
-              <div key={value.title} className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group">
-                <div className="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                  {value.icon}
-                </div>
-                <h3 className="font-serif text-2xl font-semibold mb-4">{value.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{value.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Team Section with Hover Effects */}
-        <div className="py-24">
-          <h2 className="font-serif text-4xl font-bold text-center mb-16">Meet Our Leadership</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {[
-              {
-                name: 'Ahmad Karimi',
-                role: 'Founder & Master Curator',
-                image: '/images/team1.jpg',
-                quote: '30 years of expertise in Persian carpets'
-              },
-              {
-                name: 'Sarah Mitchell',
-                role: 'Design Director',
-                image: '/images/team2.jpg',
-                quote: 'Bridging tradition with modern aesthetics'
-              },
-              {
-                name: 'Ali Reza',
-                role: 'Quality Assurance Director',
-                image: '/images/team3.jpg',
-                quote: 'Ensuring excellence in every piece'
-              }
-            ].map((member) => (
-              <div key={member.name} className="group relative">
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden transform group-hover:-translate-y-2 transition-all duration-300">
-                  <div className="aspect-w-4 aspect-h-5">
+                  <div className="rounded-2xl overflow-hidden shadow-2xl">
                     <img 
-                      src={member.image} 
-                      alt={member.name} 
-                      className="w-full h-full object-cover"
+                      src="/images/heritage.jpg" 
+                      alt="Heritage" 
+                      className="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                  <div className="p-6 text-center">
-                    <h3 className="font-serif text-xl font-semibold text-gray-900">{member.name}</h3>
-                    <p className="text-primary-500 mt-1">{member.role}</p>
-                    <p className="text-gray-600 mt-4 italic">"{member.quote}"</p>
-                  </div>
                 </div>
-              </div>
-            ))}
+              </motion.div>
+            )}
+
+            {activeTab === 'values' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="grid grid-cols-1 md:grid-cols-3 gap-8"
+              >
+                {[
+                  {
+                    icon: '🎨',
+                    title: 'Artistry',
+                    description: 'Every carpet tells a unique story through its intricate patterns and designs.'
+                  },
+                  {
+                    icon: '🌿',
+                    title: 'Sustainability',
+                    description: 'Committed to eco-friendly practices and ethical sourcing of materials.'
+                  },
+                  {
+                    icon: '💫',
+                    title: 'Innovation',
+                    description: 'Blending traditional techniques with modern design sensibilities.'
+                  }
+                ].map((value) => (
+                  <motion.div
+                    key={value.title}
+                    whileHover={{ y: -10 }}
+                    className="bg-white p-8 rounded-xl shadow-lg"
+                  >
+                    <div className="text-4xl mb-6">{value.icon}</div>
+                    <h3 className="font-serif text-2xl font-semibold mb-4">{value.title}</h3>
+                    <p className="text-gray-600">{value.description}</p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+
+            {activeTab === 'team' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="grid grid-cols-1 md:grid-cols-3 gap-12"
+              >
+                {[
+                  {
+                    name: 'Ahmad Karimi',
+                    role: 'Founder & Master Curator',
+                    image: '/images/team1.jpg',
+                    linkedin: '#'
+                  },
+                  {
+                    name: 'Sarah Mitchell',
+                    role: 'Design Director',
+                    image: '/images/team2.jpg',
+                    linkedin: '#'
+                  },
+                  {
+                    name: 'Ali Reza',
+                    role: 'Quality Assurance Director',
+                    image: '/images/team3.jpg',
+                    linkedin: '#'
+                  }
+                ].map((member) => (
+                  <motion.div
+                    key={member.name}
+                    whileHover={{ scale: 1.03 }}
+                    className="bg-white rounded-xl overflow-hidden shadow-lg"
+                  >
+                    <div className="relative">
+                      <img 
+                        src={member.image} 
+                        alt={member.name} 
+                        className="w-full h-[300px] object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="font-serif text-xl font-semibold">{member.name}</h3>
+                      <p className="text-primary-500 mb-4">{member.role}</p>
+                      <a 
+                        href={member.linkedin}
+                        className="text-gray-600 hover:text-primary-500 transition-colors"
+                      >
+                        View LinkedIn Profile →
+                      </a>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Scroll to Top Button */}
+      {isVisible && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 bg-primary-500 text-white p-4 rounded-full shadow-lg hover:bg-primary-600 transition-all duration-300"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 };
