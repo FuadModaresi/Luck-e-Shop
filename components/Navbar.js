@@ -80,6 +80,7 @@ const Navbar = () => {
             <Link href="/cart" className="bg-orange text-white px-4 py-2 rounded-md hover:bg-orange/90">
               Cart (0)
             </Link>
+            <Link href="/weather" className="text-gray-700 hover:text-orange">Weather</Link>
             {/* Chat Button */}
             <button
               onClick={() => setIsOpen(true)}
