@@ -1,19 +1,28 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+import dynamic from 'next/dynamic';
 import axios from 'axios';
 
-// Fix for Leaflet icons
-const L = typeof window !== 'undefined' ? require('leaflet') : null;
-if (L) {
-  delete L.Icon.Default.prototype._getIconUrl;
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  });
-}
+// Dynamically import the map components with no SSR
+const MapContainer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+const Marker = dynamic(
+  () => import('react-leaflet').then((mod) => mod.Marker),
+  { ssr: false }
+);
+const Popup = dynamic(
+  () => import('react-leaflet').then((mod) => mod.Popup),
+  { ssr: false }
+);
+
+// Create a separate component for the map
+const Map = dynamic(() => import('../components/Map'), { ssr: false });
 
 const WeatherPage = () => {
   const [weatherData, setWeatherData] = useState(null);
@@ -21,21 +30,25 @@ const WeatherPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [map, setMap] = useState(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
 
   useEffect(() => {
+    if (!isClient) return;
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const newLocation = {
+          setLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          };
-          setLocation(newLocation);
-          fetchWeatherData(newLocation.lat, newLocation.lng);
-          if (map) map.setView([newLocation.lat, newLocation.lng], 13);
+          });
+          fetchWeatherData(position.coords.latitude, position.coords.longitude);
         },
         (error) => {
           console.error('Error getting location:', error);
@@ -43,7 +56,7 @@ const WeatherPage = () => {
         }
       );
     }
-  }, [map]);
+  }, [isClient]);
 
   const fetchWeatherData = async (lat, lng) => {
     try {
@@ -95,7 +108,13 @@ const WeatherPage = () => {
     }
   };
 
-  if (typeof window === 'undefined') return null;
+  if (!isClient) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-beige-50 py-12">
@@ -163,28 +182,9 @@ const WeatherPage = () => {
 
           {/* Map */}
           <div className="h-[400px] bg-white rounded-xl shadow-lg overflow-hidden">
-            <MapContainer
-              center={[location.lat, location.lng]}
-              zoom={13}
-              style={{ height: '100%', width: '100%' }}
-              ref={setMap}
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-              <Marker position={[location.lat, location.lng]}>
-                {weatherData && (
-                  <Popup>
-                    <div className="text-center">
-                      <h3 className="font-bold">{weatherData.name}</h3>
-                      <p>{Math.round(weatherData.main.temp)}°C</p>
-                      <p className="capitalize">{weatherData.weather[0].description}</p>
-                    </div>
-                  </Popup>
-                )}
-              </Marker>
-            </MapContainer>
+            {isClient && (
+              <Map location={location} weatherData={weatherData} />
+            )}
           </div>
         </div>
       </div>
