@@ -8,7 +8,7 @@ A modern e-commerce platform for Persian carpets with an integrated weather feat
 - Product catalog with filtering and sorting
 - About page with company history
 - Contact form
-- Shopping cart functionality
+- Shopping card functionality
 - Weather forecast with map integration
 - Professional UI/UX
 
@@ -30,17 +30,20 @@ git clone https://github.com/YOUR_USERNAME/REPO_NAME.git
 ```
 
 2. Install dependencies:
+
 ```bash
 cd REPO_NAME
 npm install
 ```
 
 3. Create a `.env.local` file in the root directory and add your OpenWeatherMap API key:
+
 ```bash
 NEXT_PUBLIC_OPENWEATHER_API_KEY=your_api_key_here
 ```
 
 4. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -62,7 +65,7 @@ NEXT_PUBLIC_OPENWEATHER_API_KEY=your_api_key_here
 │   ├── about/
 │   ├── products/
 │   ├── contact/
-│   ├── cart/
+│   ├── card/
 │   ├── weather/
 │   └── page.js
 ├── components/

@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const ProductDetail = () => {
   const router = useRouter();
@@ -13,13 +13,13 @@ const ProductDetail = () => {
     if (id) {
       // Fetch product data based on the id
       fetch(`/api/products/${id}`)
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           setProduct(data);
           setLoading(false);
         })
-        .catch(error => {
-          console.error('Error fetching product:', error);
+        .catch((error) => {
+          console.error("Error fetching product:", error);
           setLoading(false);
         });
     }
@@ -39,7 +39,7 @@ const ProductDetail = () => {
       <img src={product.imageUrl} alt={product.title} className="w-full" />
       <p>{product.description}</p>
       <p>${product.price}</p>
-      <button className="bg-green text-white p-2 rounded">Add to Cart</button>
+      <button className="bg-green text-white p-2 rounded">Add to card</button>
     </div>
   );
 };
