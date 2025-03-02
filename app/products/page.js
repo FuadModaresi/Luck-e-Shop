@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useCart } from "../context/CartContext";
 
 // Replace image paths with placeholder images
-const heroImage = "https://placehold.co/1920x1080";
+const heroImage = "/images/products-hero.jpg";
 const productImage = "https://placehold.co/600x400";
 
 const ProductsPage = () => {
@@ -27,7 +27,7 @@ const ProductsPage = () => {
       id: 1,
       title: "Persian Tabriz Carpet",
       price: 1299,
-      image: productImage, // Changed from "/images/tabriz.jpg"
+      image: "/images/tabriz.jpg",
       category: "Traditional",
       rating: 4.8,
       reviews: 124,
@@ -75,7 +75,7 @@ const ProductsPage = () => {
       <div className="relative bg-gray-900 text-white py-16">
         <div className="absolute inset-0 overflow-hidden">
           <img
-            src={heroImage} // Changed from "/images/products-hero.jpg"
+            src={heroImage} 
             alt="Carpet Collection"
             className="w-full h-full object-cover opacity-30"
           />
