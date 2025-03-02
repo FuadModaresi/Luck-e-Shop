@@ -1,43 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useCart } from "../context/CartContext";
 
 export default function card() {
-  const [cardItems, setcardItems] = useState([
-    {
-      id: 1,
-      title: "Persian Tabriz Carpet",
-      price: 1299,
-      image: "/images/tabriz.jpg",
-      quantity: 1,
-    },
-    {
-      id: 2,
-      title: "Isfahan Silk Carpet",
-      price: 2499,
-      image: "/images/isfahan.jpg",
-      quantity: 1,
-    },
-  ]);
+  const { cartItems, updateQuantity, removeItem, totalQuantity, subtotal } = useCart();
 
-  const totalQuantity = cardItems.reduce((sum, item) => sum + item.quantity, 0);
-
-  const updateQuantity = (id, newQuantity) => {
-    if (newQuantity < 1) return;
-    setcardItems(
-      cardItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const removeItem = (id) => {
-    setcardItems(cardItems.filter((item) => item.id !== id));
-  };
-
-  const subtotal = cardItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
   const shipping = 50;
   const tax = subtotal * 0.1; // 10% tax
   const total = subtotal + shipping + tax;
@@ -71,7 +37,7 @@ export default function card() {
             </div>
           </div>
 
-          {cardItems.length === 0 ? (
+          {cartItems.length === 0 ? (
             <div className="text-center py-12">
               <h2 className="text-2xl font-semibold text-gray-600">
                 Your card is empty
@@ -87,7 +53,7 @@ export default function card() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* card Items */}
               <div className="md:col-span-2 space-y-4">
-                {cardItems.map((item) => (
+                {cartItems.map((item) => (
                   <div
                     key={item.id}
                     className="bg-white rounded-lg shadow-md p-6 flex items-center gap-4"

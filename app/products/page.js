@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useCart } from "../context/CartContext";
 
 // Replace image paths with placeholder images
 const heroImage = "https://placehold.co/1920x1080";
@@ -65,6 +66,8 @@ const ProductsPage = () => {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 },
   };
+
+  const { addToCart } = useCart();
 
   return (
     <div className="bg-beige-50 min-h-screen">
@@ -275,7 +278,10 @@ const ProductsPage = () => {
                         <p>Size: {product.dimensions}</p>
                         <p>Material: {product.material}</p>
                       </div>
-                      <button className="w-full bg-primary-500 text-white py-2 rounded-lg hover:bg-primary-600 transition-colors">
+                      <button
+                        onClick={() => addToCart(product)}
+                        className="w-full bg-primary-500 text-white py-2 rounded-lg hover:bg-primary-600 transition-colors"
+                      >
                         Add to card
                       </button>
                     </div>

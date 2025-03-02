@@ -1,8 +1,12 @@
+"use client";
 import Link from 'next/link';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { useCart } from './context/CartContext';
 
 const Home = () => {
+  const { addToCart } = useCart();
+  
   const carpets = [
     {
       id: 1,
@@ -50,7 +54,7 @@ const Home = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-serif text-6xl font-bold mb-6 tracking-tight">Discover the Art of Persian Carpets</h1>
           <p className="text-xl mb-8 text-gray-200 max-w-2xl mx-auto">Handcrafted masterpieces that transform your space into a timeless sanctuary</p>
-          <a 
+          <Link 
             href="/products"
             className="inline-flex items-center bg-primary-500 px-8 py-4 rounded-full text-white font-semibold hover:bg-primary-600 transition-all shadow-lg hover:shadow-xl"
           >
@@ -58,7 +62,7 @@ const Home = () => {
             <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -68,11 +72,8 @@ const Home = () => {
         <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">Discover our carefully curated selection of exceptional Persian carpets</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {carpets.map((carpet) => (
-            <a 
+            <div 
               key={carpet.id}
-              href="https://github.com/FuadModaresi"
-              target="_blank"
-              rel="noopener noreferrer"
               className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300"
             >
               <img 
@@ -82,9 +83,23 @@ const Home = () => {
               />
               <div className="p-6">
                 <h3 className="text-xl font-semibold mb-2">{carpet.title}</h3>
-                <p className="text-gray-600">${carpet.price.toLocaleString()}</p>
+                <p className="text-gray-600 mb-4">${carpet.price.toLocaleString()}</p>
+                <div className="flex justify-between">
+                  <Link 
+                    href={`/products/${carpet.id}`}
+                    className="text-primary-500 hover:text-primary-600"
+                  >
+                    View Details
+                  </Link>
+                  <button 
+                    onClick={() => addToCart(carpet)}
+                    className="bg-primary-500 text-white px-4 py-2 rounded hover:bg-primary-600 transition"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
-            </a>
+            </div>
           ))}
         </div>
       </div>
